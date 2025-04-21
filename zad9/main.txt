@@ -1,0 +1,31 @@
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        int size = 5; // Rozmiar siatki
+        int threads = 3; // Liczba wątków
+
+        Function originalFunction = new ExampleFunction();
+        CountedFunction function = new CountedFunction(originalFunction); // Dekoracja funkcji
+
+        ParallelCalculations calculator = new FastParallelCalculations();
+
+        System.out.println("Obliczanie wartości funkcji na siatce...");
+        List<List<Double>> result = calculator.map(function, size, threads);
+
+        System.out.println("Wyniki:");
+        for (List<Double> row : result) {
+            System.out.println(row);
+        }
+
+        // Sprawdzanie liczby wywołań
+        int expectedCalls = size * size;
+        int actualCalls = function.getCallCount();
+
+        System.out.printf("Liczba wywołań function.get: %d (oczekiwane: %d)%n", actualCalls, expectedCalls);
+
+        if (actualCalls != expectedCalls) {
+            System.err.println("Błąd: liczba wywołań funkcji jest niepoprawna!");
+        }
+    }
+}
